@@ -1,11 +1,13 @@
 Name:           efi-helper
-Version:        0.3.1
-Release:        0%{?dist}
+Version:        0.3.9
+Release:        3%{?dist}
 Summary:        Help to work around EFI issues
 
 License:        GPLv3
 URL:            https://github.com/sri-arjuna/%{name}
 Source0:        %{name}-%{version}.tar.gz
+
+BuildArch:      noarch
 
 Requires:       tui
 
@@ -37,5 +39,10 @@ mv %{name}/[RL]*  %{buildroot}%{_datarootdir}/%{name}
 %{_bindir}/efi-helper
 
 %changelog
+* Wed Nov 26 2014 Simon A. Erat <erat.simon@gmail.com> 0.3.9
+- TUI had changed name for tui-value-* to tui-conf-*
+- Windows is now ver 8.1
+- Fixed 'efi' file for fedora
+
 * Fri Oct 24 2014 Simon A. Erat <erat.simon@gmail.com> 0.0.5
 - Initial package

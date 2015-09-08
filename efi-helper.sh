@@ -22,10 +22,10 @@
 #	File:		efi-helper
 #	Author: 	Simon Arjuna Erat (sea)
 #	Contact:	erat.simon@gmail.com
-#	License:	GNU General Public License (LGPL)
+#	License:	GNU General Public License (GPL)
 #	Created:	2014.04.15
-#	Changed:	2014.10.05
-	script_version=0.3.1
+#	Changed:	2014.11.26
+	script_version=0.3.9
 	TITLE="Troubleshooting efibootmgr"
 #	Description:	This script should help to get basics troubleshooting tasks done
 #			However, it is not a 'complete handler' for the use of eifbootmgr
@@ -41,7 +41,7 @@
 	CONFIG_DIR="$HOME/.config/$ME"		# Configuration directory
 	CONFIG="$CONFIG_DIR/$ME.conf"		# Configuration file
 	LOG="$CONFIG_DIR/$ME.log"		# Logfile
-	EFI_REMOVE=/etc/profile.d/efi-helper.sh # This script will contain the data to be remove upon EVERY start of linux
+	EFI_REMOVE=/etc/profile.d/efi-helper-remove.sh # This script will contain the data to be remove upon EVERY start of linux
 #
 #	Internal defaults
 #
@@ -87,8 +87,7 @@ Log:		$LOG
 #
 #	Check if TUI is installed...
 #
-	S=/etc/profile.d/tui.sh
-	if [[ ! -f $S ]]
+	if !  which tui 2>/dev/zero 1>/dev/zero
 	then 	[[ 0 -ne $UID ]] && \
 			printf "\n#\n#\tPlease restart the script as root to install TUI (Text User Interface).\n#\n#\n" && \
 			exit 1
@@ -125,12 +124,12 @@ Log:		$LOG
 #
 	fedora_lbl=$(awk '{print $1}'  /etc/fedora-release)
 	fedora_ver=$(awk '{print $3}'  /etc/fedora-release)
-	fedora_efi=shim-fedora.efi
+	fedora_efi=shim.efi
 #
 #	Variables : Windows
 #
 	windows_lbl=Windows
-	windows_ver=8
+	windows_ver=8.1
 	windows_efi=bootmgfw.efi
 "
 #
@@ -257,25 +256,25 @@ EOF
 			tui-title "Setup : $ME"
 			
 			# Its only 1 file, preview
-			for VAR in $(tui-value-get -l "$CONFIG");do 
-				val="$(tui-value-get $CONFIG $VAR)"
+			for VAR in $(tui-conf-get -l "$CONFIG");do 
+				val="$(tui-conf-get $CONFIG $VAR)"
 				tui-echo "$VAR" "$val"
 			done
 			
 			tui-echo "Please select wich value to change:"
-			select VAR in Back Edit $(tui-value-get -l "$CONFIG");do
+			select VAR in Back Edit $(tui-conf-get -l "$CONFIG");do
 			case $VAR in
 			Back) 	setup_toggle=false
 				break
 				;;
 			Edit)	tui-edit "$CONFIG"
 				;;
-			*)	VAL=$(tui-value-get "$CONFIG" "$VAR")
+			*)	VAL=$(tui-conf-get "$CONFIG" "$VAR")
 				tui-echo "Currently '$VAR' is set to '$VAL'."
 				tui-yesno "Do you really want to change this?" || break
 				newval=$(tui-read "Please type new value:")
 				msg="Changed \"$VAR\" from \"$VAL\" to \"$newval\""
-				tui-value-set "$CONFIG" "$VAR" "$newval"
+				tui-conf-set "$CONFIG" "$VAR" "$newval"
 				tui-status $? "$msg" && \
 					doLog "Setup: $msg" || \
 					doLog "Setup: Failed to c$(printf ${msg:1}|sed s,ged,ge,g)"
