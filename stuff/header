@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+[ -z "$1" ] && exit 1
+source ./configure.yassi
+source ./${1}_dirs.conf
+
+cat > ./bin/$1 << EO_FILE
+#!/usr/bin/env bash
+# ------------------------------------------------------------------------
+#
+# Copyright (c) 2014-2016 by Simon Arjuna Erat (sea)  <erat.simon@gmail.com>
+# All rights reserved.
+#
+# This program is free software: you can redistribute it and/or modify it
+# under the terms of the GNU Lesser General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>
+#
+# ------------------------------------------------------------------------
+#
+#	File:		efi-helper
+#	Author: 	Simon Arjuna Erat (sea)
+#	Contact:	erat.simon@gmail.com
+#	License:	GNU General Public License (GPL)
+#	Created:	2014.04.15
+#	Changed:	2016.01.09
+	script_version=0.4
+	TITLE="Troubleshooting efibootmgr"
+#	Description:	This script should help to get basics troubleshooting tasks done
+#			However, it is not a 'complete handler' for the use of eifbootmgr
+#
+#
+#	Script Environment
+#
+	ME="\${0##*/}"				# Basename of efi-helper
+	ME="\${ME/.sh/}"				# Cut off .sh extension, if available
+	ME_DIR="$DATADIR"
+	CONFIG_DIR="$SYSCONFDIR"		# Configuration directory
+	CONFIG="\$CONFIG_DIR/\$ME.conf"		# Configuration file
+	LOG="\$CONFIG_DIR/\$ME.log"		# Logfile
+	EFI_REMOVE=\$CONFIG_DIR/profile.d/\${ME}-remove.sh # This script will contain the data to be remove upon EVERY start of linux
+EO_FILE
+cat "stuff/$1.tpl" >> "./bin/$1"

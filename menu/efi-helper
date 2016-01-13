@@ -100,7 +100,6 @@ Log:		$LOG
     		sh /tmp/tui.inst/install.sh || \
     			(printf "\n#\n#\tPlease report this issue of TUI installation fail.\n#\n#\n";exit 1)
     	fi
-    	source $S ; S=""
 #
 #	Configuration file template
 #

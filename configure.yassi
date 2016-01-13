@@ -1,0 +1,26 @@
+#
+#	Project Info
+#
+	APP_NAME=efi-helper
+	APP_REQUIRES="efibootmgr awk bash grep sed"
+	doRef=true
+	doTUI=true
+#
+#	Targets
+#
+	SYSCONFDIR=stuff/efi-helper.conf
+	BINDIR=bin
+	DOCDIR=docs
+	DATADIR=menu
+#
+#	Installable Dependency
+#
+	MAKE[0]="stuff/header $APP_NAME"
+	MAKE[1]="touch stuff/efi-helper.conf"
+	MAKE[2]="(set -x;bin/efi-helper --sample > stuff/efi-helper.conf)"
+	MAKE_CREATES=bin/$APP_NAME
+#
+#	Contact
+#
+	AUTHOR_EMAIL="erat.simon@gmail.com"
+	BUGTRACKER="https://github.com/sri-arjuna/efi-helper/issues"
